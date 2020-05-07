@@ -6,7 +6,6 @@ import os
 red = "\033[1;31;40m"
 green = "\033[1;32;40m"
 cyan = "\033[1;36;40m"
-Bright Blue = "\033[1;34;40m" 
 
 
 banner = """
@@ -16,7 +15,7 @@ banner = """
 |_| |___/ /_/ \_\___/  |_| \___/|____|___|_|\_\___|_|_\ 
 """
 os.system("clear")
-print(Bright Blue+ banner)
+print(green+ banner)
 
 print("")
 
