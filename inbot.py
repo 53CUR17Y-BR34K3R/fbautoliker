@@ -9,8 +9,8 @@ cyan = "\033[1;36;40m"
 
 
 banner = """
-FACEBOOK AUTO LIKER 
-  codded By indonesian  hacker squad
+                   FACEBOOK AUTO LIKER 
+           codded By indonesian  hacker squad
 """
 os.system("clear")
 print(green+ banner)
